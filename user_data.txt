@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Loop until internet is available with a delay to handle slow network
+while ! ping -c 1 -W 5 8.8.8.8 &>/dev/null; do
+    echo "Waiting for internet connection..."
+    sleep 5 # Adding delay to avoid rapid retries
+done
+# Update and install httpd
+sudo yum update -y
+sudo yum install -y httpd
+
+# Set permissions for /var/www/html
+sudo chmod 777 -R /var/www/html
+# Create index.html with server hostname
+echo "<h1> Welcome to Rajco Session $(hostname -f) </h1>" > /var/www/html/index.html
+# Start and enable httpd service
+sudo systemctl start httpd
+sudo systemctl enable httpd
